@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Studio - Profesyonel QR Kod Oluşturucu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qr-code-styling/1.6.0-rc.1/qr-code-styling.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            color: #2d3748;
+        }
+
+        header {
+            background: white;
+            padding: 1.5rem 3rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            min-height: calc(100vh - 180px);
+        }
+
+        .left-panel, .right-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        .step-indicator {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .step {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: #f7fafc;
+            color: #a0aec0;
+            transition: all 0.3s;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .step.completed {
+            background: #48bb78;
+            color: white;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            margin-right: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+        }
+
+        .preview-container {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-mockup {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .phone-screen {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .url-display {
+            color: #667eea;
+            font-weight: 600;
+            word-break: break-all;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .preview-text {
+            color: #718096;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        .qr-canvas {
+            margin: 1.5rem auto;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+        }
+
+        .option-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .option-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .option-card.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .option-card img, .option-card svg {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 0.5rem;
+        }
+
+        .option-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .color-picker-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .color-input-wrapper {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .color-input {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #f7fafc;
+            padding: 0.75rem;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .color-input:hover {
+            border-color: #cbd5e0;
+        }
+
+        input[type="color"] {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .color-value {
+            font-size: 0.85rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .slider-group {
+            margin-top: 1rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        .logo-upload {
+            border: 2px dashed #e2e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logo-upload:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+
+        .logo-preview {
+            max-width: 100px;
+            max-height: 100px;
+            margin: 1rem auto;
+            display: none;
+        }
+
+        .logo-preview.show {
+            display: block;
+        }
+
+        .download-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .download-btn {
+            padding: 0.875rem;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .download-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #48bb78;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        footer {
+            background: white;
+            padding: 2rem;
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+        }
+
+        .sticker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .sticker-option {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            position: relative;
+        }
+
+        .sticker-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .sticker-option.active {
+            border-color: #667eea;
+            background: #edf2f7;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .sticker-preview {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo">📱</div>
+            <div class="logo-text">QR Studio</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="step-indicator">
+                <div class="step active" id="step1Indicator">1. Kurulum Bilgileri</div>
+                <div class="step" id="step2Indicator">2. QR Kodunu Tasarlayın</div>
+            </div>
+
+            <!-- ADIM 1 -->
+            <div id="step1" class="step-content">
+                <h2>Kurulum Bilgileri</h2>
+                <p class="subtitle">QR kodunuz için temel bilgileri girin</p>
+
+                <div class="form-group">
+                    <label for="qrName">QR Kodunun Adı</label>
+                    <input type="text" id="qrName" placeholder="Örn: Web Sitem, Menü, İletişim" value="QR Kodum">
+                </div>
+
+                <div class="form-group">
+                    <label for="qrUrl">Web Sitesi URL'si</label>
+                    <input type="url" id="qrUrl" placeholder="https://example.com" value="https://example.com">
+                </div>
+
+                <button class="btn btn-primary" onclick="goToStep2()">Devam Et →</button>
+            </div>
+
+            <!-- ADIM 2 -->
+            <div id="step2" class="step-content hidden">
+                <h2>QR Kodunu Tasarlayın</h2>
+                <p class="subtitle">Görünümü özelleştirin</p>
+
+                <div class="section">
+                    <div class="section-title">📋 Çıkartma (Sticker)</div>
+                    <div class="sticker-grid">
+                        <div class="sticker-option active" data-sticker="none">
+                            <div class="sticker-preview">⬜</div>
+                            <div class="option-label">Yok</div>
+                        </div>
+                        <div class="sticker-option" data-sticker="scanme">
+                            <div class="sticker-preview">📲</div>
+                            <div class="option-label">SCAN ME</div>
+                        </div>
+                        <div class="sticker-option" data-sticker="circle">
+                            <div class="sticker-preview">⭕</div>
+                            <div class="option-label">Yuvarlak</div>
+                        </div>
+                        <div class="sticker-option" data-sticker="square">
+                            <div class="sticker-preview">🔲</div>
+                            <div class="option-label">Kare</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">🔷 Şekil (Pattern)</div>
+                    <div class="options-grid">
+                        <div class="option-card" data-pattern="square">
+                            <div class="option-label">Square</div>
+                        </div>
+                        <div class="option-card active" data-pattern="dots">
+                            <div class="option-label">Dots</div>
+                        </div>
+                        <div class="option-card" data-pattern="rounded">
+                            <div class="option-label">Rounded</div>
+                        </div>
+                        <div class="option-card" data-pattern="extra-rounded">
+                            <div class="option-label">Fluid</div>
+                        </div>
+                        <div class="option-card" data-pattern="classy">
+                            <div class="option-label">Classico</div>
+                        </div>
+                        <div class="option-card" data-pattern="classy-rounded">
+                            <div class="option-label">Hexagon</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">🎨 Renk Ayarları</div>
+                    <div class="color-picker-group">
+                        <div class="color-input-wrapper">
+                            <label>QR Rengi</label>
+                            <div class="color-input">
+                                <input type="color" id="dotsColor" value="#000000">
+                                <span class="color-value">#000000</span>
+                            </div>
+                        </div>
+                        <div class="color-input-wrapper">
+                            <label>Arka Plan</label>
+                            <div class="color-input">
+                                <input type="color" id="bgColor" value="#ffffff">
+                                <span class="color-value">#ffffff</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">🖼️ Logo Ekleme</div>
+                    <div class="logo-upload" onclick="document.getElementById('logoInput').click()">
+                        <div>📤 Logo Yükle</div>
+                        <div style="font-size: 0.85rem; color: #718096; margin-top: 0.5rem;">PNG, SVG veya JPG</div>
+                        <img id="logoPreview" class="logo-preview" alt="Logo Preview">
+                    </div>
+                    <input type="file" id="logoInput" accept="image/*" style="display: none;" onchange="handleLogoUpload(event)">
+                    
+                    <div class="slider-group">
+                        <label>Logo Boyutu: <span id="logoSizeValue">0.3</span></label>
+                        <input type="range" id="logoSize" min="0.1" max="0.5" step="0.05" value="0.3">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="logoMargin" checked>
+                        <label for="logoMargin">Logo çerçevesi</label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">💾 İndirme Formatı</div>
+                    <div class="download-section">
+                        <button class="download-btn" onclick="downloadQR('png')">PNG</button>
+                        <button class="download-btn" onclick="downloadQR('jpeg')">JPG</button>
+                        <button class="download-btn" onclick="downloadQR('svg')">SVG</button>
+                        <button class="download-btn" onclick="downloadQR('webp')">WEBP</button>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="goToStep1()">← Geri</button>
+                    <button class="btn btn-primary" style="flex: 1;" onclick="downloadQR('png')">QR Kodu İndir</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="preview-container">
+                <div id="step1Preview">
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
+                            <div class="url-display" id="previewUrl">https://example.com</div>
+                            <div class="preview-text">QR kod sizi bu adrese götürecektir</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="step2Preview" class="hidden">
+                    <h3 style="margin-bottom: 1.5rem; color: #2d3748;">Canlı Önizleme</h3>
+                    <div id="qrCode" class="qr-canvas"></div>
+                    <div style="margin-top: 1.5rem;">
+                        <div style="font-weight: 600; color: #4a5568;" id="previewName">QR Kodum</div>
+                        <div style="font-size: 0.85rem; color: #718096; margin-top: 0.25rem;" id="previewUrlStep2">https://example.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <span>✅</span>
+        <span>QR kod başarıyla indirildi!</span>
+    </div>
+
+    <footer>
+        <p>© 2025 QR Studio. Modern QR Kod Oluşturucu</p>
+    </footer>
+
+    <script>
+        let qrCode;
+        let currentSettings = {
+            name: 'QR Kodum',
+            url: 'https://example.com',
+            pattern: 'dots',
+            sticker: 'none',
+            dotsColor: '#000000',
+            bgColor: '#ffffff',
+            logo: null,
+            logoSize: 0.3,
+            logoMargin: true
+        };
+
+        // LocalStorage'dan ayarları yükle
+        function loadSettings() {
+            const saved = localStorage.getItem('qrSettings');
+            if (saved) {
+                currentSettings = { ...currentSettings, ...JSON.parse(saved) };
+                applySettings();
+            }
+        }
+
+        // Ayarları localStorage'a kaydet
+        function saveSettings() {
+            localStorage.setItem('qrSettings', JSON.stringify(currentSettings));
+        }
+
+        // Ayarları forma uygula
+        function applySettings() {
+            document.getElementById('qrName').value = currentSettings.name;
+            document.getElementById('qrUrl').value = currentSettings.url;
+            document.getElementById('dotsColor').value = currentSettings.dotsColor;
+            document.getElementById('bgColor').value = currentSettings.bgColor;
+            document.getElementById('logoSize').value = currentSettings.logoSize;
+            document.getElementById('logoMargin').checked = currentSettings.logoMargin;
+            
+            updateColorValues();
+        }
+
+        // Adım 2'ye geç
+        function goToStep2() {
+            const url = document.getElementById('qrUrl').value;
+            const name = document.getElementById('qrName').value;
+
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('Lütfen geçerli bir URL girin (https:// ile başlamalı)');
+                return;
+            }
+
+            currentSettings.url = url;
+            currentSettings.name = name;
+            saveSettings();
+
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            document.getElementById('step1Preview').classList.add('hidden');
+            document.getElementById('step2Preview').classList.remove('hidden');
+            document.getElementById('step1Indicator').classList.remove('active');
+            document.getElementById('step1Indicator').classList.add('completed');
+            document.getElementById('step2Indicator').classList.add('active');
+
+            document.getElementById('previewName').textContent = name;
+            document.getElementById('previewUrlStep2').textContent = url;
+
+            generateQR();
+        }
+
+        // Adım 1'e geri dön
+        function goToStep1() {
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1Preview').classList.remove('hidden');
+            document.getElementById('step2Preview').classList.add('hidden');
+            document.getElementById('step1Indicator').classList.add('active');
+            document.getElementById('step1Indicator').classList.remove('completed');
+            document.getElementById('step2Indicator').classList.remove('active');
+        }
+
+        // QR kod oluştur
+        function generateQR() {
+            const qrContainer = document.getElementById('qrCode');
+            qrContainer.innerHTML = '';
+
+            const options = {
+                width: 300,
+                height: 300,
+                type: 'canvas',
+                data: currentSettings.url,
+                dotsOptions: {
+                    color: currentSettings.dotsColor,
+                    type: currentSettings.pattern
+                },
+                backgroundOptions: {
+                    color: currentSettings.bgColor,
+                },
+                cornersSquareOptions: {
+                    type: currentSettings.pattern,
+                    color: currentSettings.dotsColor
+                },
+                cornersDotOptions: {
+                    type: currentSettings.pattern,
+                    color: currentSettings.dotsColor
+                }
+            };
+
+            if (currentSettings.logo) {
+                options.image = currentSettings.logo;
+                options.imageOptions = {
+                    hideBackgroundDots: true,
+                    imageSize: currentSettings.logoSize,
+                    margin: currentSettings.logoMargin ? 5 : 0
+                };
+            }
+
+            qrCode = new QRCodeStyling(options);
+            qrCode.append(qrContainer);
+        }
+
+        // Logo yükleme
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentSettings.logo = e.target.result;
+                    document.getElementById('logoPreview').src = e.target.result;
+                    document.getElementById('logoPreview').classList.add('show');
+                    saveSettings();
+                    generateQR();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // QR kodu indir
+        function downloadQR(format) {
+            const extension = format === 'jpeg' ? 'jpg' : format;
+            const fileName = `${currentSettings.name.replace(/\s+/g, '_')}_qr.${extension}`;
+            
+            qrCode.download({
+                name: fileName,
+                extension: format
+            });
+
+            showToast();
+        }
+
+        // Toast bildirimi göster
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Renk değerlerini güncelle
+        function updateColorValues() {
+            document.querySelectorAll('.color-value').forEach((el, idx) => {
+                const input = el.previousElementSibling;
+                el.textContent = input.value;
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('qrUrl').addEventListener('input', function(e) {
+            document.getElementById('previewUrl').textContent = e.target.value;
+        });
+
+        document.getElementById('dotsColor').addEventListener('input', function(e) {
+            currentSettings.dotsColor = e.target.value;
+            updateColorValues();
+            saveSettings();
+            generateQR();
+        });
+
+        document.getElementById('bgColor').addEventListener('input', function(e) {
+            currentSettings.bgColor = e.target.value;
+            updateColorValues();
+            saveSettings();
+            generateQR();
+        });
+
+        document.getElementById('logoSize').addEventListener('input', function(e) {
+            currentSettings.logoSize = parseFloat(e.target.value);
+            document.getElementById('logoSizeValue').textContent = e.target.value;
+            saveSettings();
+            generateQR();
+        });
+
+        document.getElementById('logoMargin').addEventListener('change', function(e) {
+            currentSettings.logoMargin = e.target.checked;
+            saveSettings();
+            generateQR();
+        });
+
+        // Pattern seçimi
+        document.querySelectorAll('[data-pattern]').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('[data-pattern]').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                currentSettings.pattern = this.dataset.pattern;
+                saveSettings();
+                generateQR();
+            });
+        });
+
+        // Sticker seçimi
+        document.querySelectorAll('[data-sticker]').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('[data-sticker]').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                currentSettings.sticker = this.dataset.sticker;
+                saveSettings();
+                generateQR();
+            });
+        });
+
+        // Sayfa yüklendiğinde
+        window.addEventListener('load', function() {
+            loadSettings();
+        });
+    </script>
+</body>
+  </html>
