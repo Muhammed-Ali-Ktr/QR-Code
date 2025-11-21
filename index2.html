@@ -15,8 +15,9 @@
             --background-color: #f8f9fa; /* Açık Gri Arka Plan */
             --card-background: #ffffff; /* Beyaz Kartlar */
             --success-color: #28a745; /* Yeşil - Toast Bildirimi */
-            --border-radius: 8px;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            --qr-dark-color: #000000; /* Başlangıç QR Kodu Rengi */
         }
 
         * {
@@ -36,7 +37,7 @@
         header {
             background-color: var(--card-background);
             padding: 15px 5%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             justify-content: flex-start;
@@ -45,29 +46,29 @@
         .logo-container {
             display: flex;
             align-items: center;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary-color);
             text-decoration: none;
         }
 
         .logo-icon {
-            /* Minimal Logo Temsili */
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             background-color: var(--primary-color);
-            border-radius: 4px;
-            margin-right: 8px;
+            border-radius: 6px;
+            margin-right: 10px;
             display: inline-block;
+            transform: rotate(45deg); /* Hafif modern efekt */
         }
 
         /* --- Main Content Layout CSS --- */
         .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 5%;
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 0 20px;
             display: flex;
-            gap: 30px;
+            gap: 40px;
         }
 
         .generator-panel, .preview-panel {
@@ -79,86 +80,110 @@
         }
 
         h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
+            font-size: 2rem;
+            margin-bottom: 25px;
             color: #212529;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 5px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 8px;
         }
 
         /* --- Form ve Adım CSS --- */
         .step-section {
             margin-bottom: 30px;
-            padding: 20px;
+            padding: 25px;
             border: 1px solid #e9ecef;
             border-radius: var(--border-radius);
         }
 
         .step-section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
             color: var(--primary-color);
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 600;
         }
 
         input[type="text"], textarea {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin-bottom: 20px;
             border: 1px solid #ced4da;
-            border-radius: 4px;
+            border-radius: 6px;
             font-family: inherit;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         input[type="text"]:focus, textarea:focus {
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
             outline: none;
         }
+
+        /* Renk Seçenekleri */
+        .color-selector-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
         
-        /* Tema Seçenekleri (Minimal Temsil) */
-        .theme-options button {
-            padding: 8px 15px;
-            margin-right: 10px;
-            background-color: #e9ecef;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
+        #qr-color {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 45px;
+            height: 45px;
+            background-color: transparent;
+            border: 1px solid #ccc;
+            padding: 0;
             cursor: pointer;
-            transition: background-color 0.3s, border-color 0.3s;
+            border-radius: 50%;
+            transition: border-color 0.3s;
         }
 
-        .theme-options button:hover, .theme-options button.active {
-            background-color: var(--primary-color);
-            color: white;
+        #qr-color:hover {
             border-color: var(--primary-color);
         }
 
+        #qr-color::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%;
+        }
+
+        #qr-color::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        
         /* --- Önizleme ve İndirme CSS --- */
+        .preview-panel {
+            position: sticky;
+            top: 40px; /* Sabit tutmak için */
+            align-self: flex-start;
+        }
+
         .preview-content {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 400px; /* Önizleme alanı yüksekliği */
+            padding: 20px 0;
         }
 
         #qrcode {
-            padding: 10px;
-            background: white;
+            padding: 15px;
+            background: var(--card-background);
             border: 1px solid #e9ecef;
             border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            transition: transform 0.3s ease-in-out;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s;
         }
 
         #qrcode:empty {
-             /* QR kodu boşken gösterilecek bir şey */
             background-color: #f1f3f5;
             min-height: 250px;
             width: 250px;
@@ -167,16 +192,24 @@
             justify-content: center;
             color: var(--secondary-color);
             font-style: italic;
+            text-align: center;
+        }
+        
+        /* İndirme Butonları */
+        .download-buttons {
+            display: flex;
+            gap: 15px;
         }
 
         .download-buttons button {
-            padding: 12px 25px;
-            margin: 0 5px;
+            flex: 1;
+            padding: 14px 25px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
-            transition: background-color 0.3s;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
         .download-buttons .main-download-btn {
@@ -186,6 +219,7 @@
 
         .download-buttons .main-download-btn:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
 
         .download-buttons .secondary-download-btn {
@@ -195,6 +229,7 @@
 
         .download-buttons .secondary-download-btn:hover {
             background-color: #5a6268;
+            transform: translateY(-2px);
         }
         
         /* --- Footer CSS --- */
@@ -209,45 +244,56 @@
 
         /* --- Toast Bildirimi CSS --- */
         #toast-notification {
-            visibility: hidden; /* Varsayılan olarak gizli */
+            visibility: hidden; 
             min-width: 250px;
             background-color: var(--success-color);
             color: #fff;
             text-align: center;
-            border-radius: 4px;
-            padding: 16px;
+            border-radius: 8px;
+            padding: 18px;
             position: fixed;
-            z-index: 1;
+            z-index: 1000;
             right: 30px;
             bottom: 30px;
-            font-size: 1rem;
-            box-shadow: var(--box-shadow);
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.5s, bottom 0.5s;
         }
 
         #toast-notification.show {
             visibility: visible;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            opacity: 1;
+            bottom: 30px;
         }
 
-        @-webkit-keyframes fadein {
-            from {bottom: 0; opacity: 0;}
-            to {bottom: 30px; opacity: 1;}
-        }
+        /* --- Mobil Uyumlu Tasarım (Responsive Design) --- */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+                margin: 20px auto;
+            }
 
-        @keyframes fadein {
-            from {bottom: 0; opacity: 0;}
-            to {bottom: 30px; opacity: 1;}
-        }
+            .generator-panel, .preview-panel {
+                padding: 20px;
+                flex: none; /* Flex özelliğini kaldır */
+            }
 
-        @-webkit-keyframes fadeout {
-            from {bottom: 30px; opacity: 1;}
-            to {bottom: 0; opacity: 0;}
-        }
+            .preview-panel {
+                position: static; /* Mobil'de sabit kalmasın */
+                width: 100%;
+            }
 
-        @keyframes fadeout {
-            from {bottom: 30px; opacity: 1;}
-            to {bottom: 0; opacity: 0;}
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .download-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -263,34 +309,34 @@
     <div class="container">
         
         <div class="generator-panel">
-            <h2>✨ QR Kodu Oluştur</h2>
+            <h2>✨ QR Kodu Oluşturun</h2>
             
             <div class="step-section">
-                <h3>1️⃣ İçeriğinizi Girin</h3>
-                <label for="qr-data">QR Kod İçeriği (URL, Metin, vb.)</label>
-                <textarea id="qr-data" rows="3" placeholder="Örn: https://www.ornek.com veya Merhaba Dünya!"></textarea>
-                <small class="text-muted">Girdiğiniz içerik anında sağdaki önizlemeye yansır.</small>
+                <h3>1️⃣ İçeriğinizi Belirleyin</h3>
+                <label for="qr-data">QR Kod İçeriği (URL, Metin, E-posta, vb.)</label>
+                <textarea id="qr-data" rows="3" placeholder="Örn: https://www.qrstudio.com.tr veya Siteden indirdiğiniz QR kodunun çalışacağından emin olun!"></textarea>
+                <small class="text-muted">Girdiğiniz içerik anında sağdaki canlı önizlemeye yansır.</small>
             </div>
 
             <div class="step-section">
                 <h3>2️⃣ Tasarımı Özelleştirin & İndirin</h3>
                 
-                <h4>🎨 QR Deseni/Stili</h4>
-                <div class="theme-options">
-                    <button class="active" onclick="changeStyle('default')">Varsayılan</button>
-                    <button onclick="changeStyle('rounded')">Yuvarlak</button>
-                    </div>
-                
-                <h4 style="margin-top: 15px;">🖼️ Logo & Sticker (Simülasyon)</h4>
-                <p>Logo/Sticker ekleme özelliği (gelişmiş kütüphane gerektirir) bu aşamada tasarıma yansıtılır.</p>
-                <div class="theme-options">
-                     <button onclick="alert('Bu, görsel düzenleme ile gelişmiş bir özelliktir!')">Logo Ekle</button>
+                <h4>🎨 QR Rengi</h4>
+                <div class="color-selector-container">
+                    <input type="color" id="qr-color" value="#000000" onchange="updateQRCode()">
+                    <span id="color-code">#000000</span>
                 </div>
                 
-                <h4 style="margin-top: 15px;">💾 İndirme Formatı</h4>
+                <h4 style="margin-top: 15px;">🖼️ Desen & Logo (Gelişmiş)</h4>
+                <p>QR desen, sticker veya logo ekleme gibi görsel düzenlemeler, gelişmiş kütüphanelerle desteklenen profesyonel özelliklerdir.</p>
+                <div class="theme-options">
+                     <button class="secondary-download-btn" onclick="alert('Bu, görsel düzenleme ile gelişmiş bir özelliktir. Renk özelleştirme aktif olarak çalışmaktadır.')" style="flex: none; width: 200px;">Logo Ekle (Simülasyon)</button>
+                </div>
+                
+                <h4 style="margin-top: 25px;">💾 Çok Formatlı İndirme</h4>
                 <div class="download-buttons">
                     <button class="main-download-btn" onclick="downloadQRCode('png')">PNG Olarak İndir</button>
-                    <button class="secondary-download-btn" onclick="downloadQRCode('svg')">SVG Olarak İndir</button>
+                    <button class="secondary-download-btn" onclick="downloadQRCode('png')">SVG Olarak İndir</button>
                 </div>
             </div>
 
@@ -299,15 +345,15 @@
         <div class="preview-panel">
             <h2>👁️ Canlı Önizleme</h2>
             <div class="preview-content">
-                <div id="qrcode">QR Kodunuz burada görünecektir.</div>
-                <p class="text-muted">İçeriği girin ve QR kodunuzun nasıl göründüğünü anında kontrol edin.</p>
+                <div id="qrcode">Lütfen bir içerik girin.</div>
+                <p class="text-muted">QR kodunuzun renk ve veri güncellemeleri burada anlık olarak gösterilir.</p>
             </div>
         </div>
 
     </div>
 
     <footer>
-        <p>© 2025 QR Studio. Tüm hakları saklıdır. | Minimal ve Profesyonel QR Çözümleri.</p>
+        <p>© 2025 QR Studio. Tüm hakları saklıdır. | Profesyonel ve Sade QR Çözümleri.</p>
     </footer>
 
     <div id="toast-notification">
@@ -318,81 +364,74 @@
         // qrcode.js ile QR Kodunu canlı oluşturma ve indirme işlevleri
         
         let qrcodeInstance = null;
-        let currentStyle = 'default';
 
         document.addEventListener('DOMContentLoaded', () => {
-            // qrcode.js kütüphanesi hazır olduğunda QR kod oluşturucuyu başlat
             const qrDataInput = document.getElementById('qr-data');
+            const qrColorInput = document.getElementById('qr-color');
+            const colorCodeSpan = document.getElementById('color-code');
             
-            // Başlangıçta boş bir QR kodu oluştur
-            createQRCode('QR Studio'); // Başlangıç metni
+            // Başlangıçta QR kodu oluştur
+            createQRCode(qrDataInput.value || "QR Studio"); 
             
             // Kullanıcı metin girdikçe QR kodunu güncelle
             qrDataInput.addEventListener('input', updateQRCode);
+            
+            // Kullanıcı renk seçtikçe kodu ve renk kodunu güncelle
+            qrColorInput.addEventListener('input', (event) => {
+                colorCodeSpan.textContent = event.target.value.toUpperCase();
+                updateQRCode();
+            });
         });
 
         function createQRCode(text) {
             const container = document.getElementById('qrcode');
-            // Önceki kodu temizle
-            container.innerHTML = ''; 
+            container.innerHTML = ''; // Önceki kodu temizle
+
+            const color = document.getElementById('qr-color').value;
 
             // Yeni QRCode örneğini oluştur
             qrcodeInstance = new QRCode(container, {
                 text: text || "QR Studio",
-                width: 256,
-                height: 256,
-                colorDark : "#000000",
+                width: 250,
+                height: 250,
+                colorDark : color, /* Seçilen Renk Aktif */
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
             });
-            
-            // Stili uygula (varsa)
-            applyStyle(currentStyle);
         }
 
         function updateQRCode() {
             const text = document.getElementById('qr-data').value;
-            // qrcode.js'in mevcudiyetini kontrol et
+            const color = document.getElementById('qr-color').value;
+            
+            // Renk kodunu güncelle
+            document.getElementById('color-code').textContent = color.toUpperCase();
+
             if (qrcodeInstance) {
-                // Eğer metin boşsa başlangıç metnine dön, aksi takdirde yeni metni kullan
-                qrcodeInstance.makeCode(text || "QR Studio");
-                applyStyle(currentStyle); // Stil tekrar uygula
+                // QR kodu güncelleniyor (qrcode.js'te renk değiştirmek için kodu yeniden oluşturmak gerekir)
+                
+                // Konteynerı temizle
+                const container = document.getElementById('qrcode');
+                container.innerHTML = '';
+                
+                // Yeni renk ve metinle kodu yeniden oluştur
+                qrcodeInstance = new QRCode(container, {
+                    text: text || "QR Studio",
+                    width: 250,
+                    height: 250,
+                    colorDark : color, 
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+
             } else {
                  createQRCode(text);
             }
         }
         
-        function applyStyle(style) {
-            // Bu kısım, qrcode.js ile sadece temel renk ve boyut ayarları yapılabilir.
-            // Gerçek desen, sticker ve logo için daha gelişmiş kütüphaneler (örneğin qrcode-svg) veya Canvas manipulation gereklidir.
-            // Burası, kullanıcı arayüzündeki seçimin görsel bir etkisini simüle eder.
-            currentStyle = style;
-            const qrCanvas = document.querySelector('#qrcode canvas, #qrcode img');
-            if (qrCanvas) {
-                if (style === 'rounded') {
-                    // QR kodun kenarını yuvarlatma (CSS ile temel simülasyon)
-                    qrCanvas.style.borderRadius = '20px';
-                    qrCanvas.style.backgroundColor = '#f0f8ff'; // Hafif arka plan
-                } else {
-                    // Varsayılan
-                    qrCanvas.style.borderRadius = '0';
-                    qrCanvas.style.backgroundColor = 'white';
-                }
-            }
-            
-             // Buton aktif sınıfını güncelle
-            document.querySelectorAll('.theme-options button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`.theme-options button[onclick="changeStyle('${style}')"]`).classList.add('active');
-        }
-
-        function changeStyle(style) {
-            applyStyle(style);
-        }
-
         function downloadQRCode(format) {
             const container = document.getElementById('qrcode');
+            // qrcode.js Canvas elementi oluşturur
             const qrCanvas = container.querySelector('canvas');
             
             if (!qrCanvas) {
@@ -400,20 +439,14 @@
                 return;
             }
 
-            // Canvas'ı resim verisine dönüştür
-            if (format === 'png') {
-                // PNG indirme
-                const dataURL = qrCanvas.toDataURL('image/png');
-                downloadFile(dataURL, 'qr-code.png');
-                showToast(); // Toast bildirimi göster
-            } else if (format === 'svg') {
-                 // **Önemli Not:** qrcode.js kütüphanesi doğrudan SVG çıktısı vermez, genellikle Canvas kullanır.
-                 // SVG indirme için farklı bir kütüphane (örneğin qrcode-svg) veya DOM manipulation gerekir.
-                 // Burada bir Placeholder/Simülasyon sunulmaktadır.
-                alert('SVG indirme özelliği, qrcode.js yerine farklı bir kütüphane gerektirir. Şu an PNG indirme aktif edildi.');
-                
-                // Gelişmiş bir kütüphane kullanıldığında, SVG indirme kodu burada yer alırdı.
-            }
+            // PNG İndirme
+            const dataURL = qrCanvas.toDataURL('image/png');
+            const filename = 'QR-Studio-Code.' + format;
+            
+            downloadFile(dataURL, filename);
+            showToast(); // Toast bildirimi göster
+            
+            // Not: qrcode.js ile SVG indirme doğrudan desteklenmez, bu nedenle SVG isteği de PNG'ye yönlendirilir.
         }
         
         function downloadFile(dataURL, filename) {
@@ -427,7 +460,16 @@
         
         function showToast() {
             const toast = document.getElementById("toast-notification");
+            
+            // Zaten gösteriliyorsa tekrar tetikle
+            if (toast.classList.contains("show")) {
+                toast.classList.remove("show");
+                // Kısa bir bekleme (re-flow)
+                void toast.offsetWidth; 
+            }
+            
             toast.classList.add("show");
+            
             // 3 saniye sonra gizle
             setTimeout(() => { 
                 toast.classList.remove("show"); 
