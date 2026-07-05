@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next-Gen QR Code Generator</title>
+    <!-- Modern Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="qrcode.css">
+</head>
+<body class="dark-mode">
+    <div class="dashboard-container">
+        
+        <!-- Top Navigation Bar (Mockup Style) -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <div class="logo-pill">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </div>
+                    <span class="logo-text">Next-Gen QR Code</span>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="search-pill">
+                    <span class="search-circle"></span>
+                    <span class="search-text">Gelişmiş QR Kod Stüdyosu</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <button id="themeToggle" class="action-pill theme-toggle" aria-label="Temayı Değiştir">
+                    <span class="theme-icon-dark">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                    <span class="theme-icon-light">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                </button>
+                <div class="action-pill decorative-dot" title="Sistem Aktif">
+                    <span class="pulse-dot"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Type Tabs Sub-header -->
+        <nav class="content-tabs-bar">
+            <button class="type-tab active" data-type="url">
+                <span class="tab-icon">🔗</span> URL / Web Sitesi
+            </button>
+            <button class="type-tab" data-type="text">
+                <span class="tab-icon">📝</span> Düz Metin
+            </button>
+            <button class="type-tab" data-type="wifi">
+                <span class="tab-icon">📶</span> Wi-Fi Ağı
+            </button>
+            <button class="type-tab" data-type="email">
+                <span class="tab-icon">📧</span> E-posta
+            </button>
+            <button class="type-tab" data-type="phone">
+                <span class="tab-icon">📞</span> Telefon
+            </button>
+        </nav>
+
+        <!-- Bento Grid Layout -->
+        <main class="bento-grid">
+            
+            <!-- Column 1: Live Preview (Left, spans full height) -->
+            <section class="glass-card bento-preview">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="status-indicator"></span>
+                        Canlı Önizleme
+                    </h2>
+                </div>
+                
+                <div class="preview-display">
+                    <!-- Phone mockup wrapper for premium look -->
+                    <div class="phone-mockup">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div id="qrCanvasContainer" class="qr-canvas-wrapper">
+                                <!-- qr-code-styling will append canvas/svg here -->
+                            </div>
+                        </div>
+                        <div class="phone-home-bar"></div>
+                    </div>
+
+                    <!-- Quick Download circles as in mockup -->
+                    <div class="quick-actions-corner">
+                        <button id="quickDownloadPNG" class="circle-action-btn" title="Hızlı PNG İndir">
+                            <span class="btn-tooltip">PNG</span>
+                            P
+                        </button>
+                        <button id="quickDownloadSVG" class="circle-action-btn" title="Hızlı SVG İndir">
+                            <span class="btn-tooltip">SVG</span>
+                            S
+                        </button>
+                    </div>
+                </div>
+
+                <div class="preview-actions">
+                    <button id="downloadBtn" class="primary-btn">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        İndir (PNG)
+                    </button>
+                    <button id="shareBtn" class="secondary-btn">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                        Paylaş
+                    </button>
+                </div>
+            </section>
+
+            <!-- Column 2: Inputs & Settings (Center) -->
+            <!-- Row 1: Content Input -->
+            <section class="glass-card bento-input">
+                <div class="card-header">
+                    <h2 class="card-title">QR Kod İçeriği</h2>
+                </div>
+                
+                <div id="contentInputContainer" class="content-inputs-wrapper">
+                    <!-- Inputs are dynamically rendered here by JS -->
+                </div>
+            </section>
+
+            <!-- Row 2: General & Logo Settings -->
+            <section class="glass-card bento-settings">
+                <div class="card-header">
+                    <h2 class="card-title">Genel & Logo Ayarları</h2>
+                </div>
+                
+                <div class="settings-form">
+                    <div class="control-row">
+                        <div class="control-group half-width">
+                            <label class="control-label">Kenar Boşluğu</label>
+                            <div class="slider-container">
+                                <input type="range" id="marginSlider" min="0" max="10" value="4" class="custom-slider">
+                                <span id="marginVal" class="slider-badge">4</span>
+                            </div>
+                        </div>
+                        <div class="control-group half-width">
+                            <label class="control-label">Hata Düzeltme (ECC)</label>
+                            <div class="ecc-buttons">
+                                <button class="ecc-btn" data-ecc="L" title="Düşük (%7 düzeltme)">L</button>
+                                <button class="ecc-btn active" data-ecc="M" title="Orta (%15 düzeltme)">M</button>
+                                <button class="ecc-btn" data-ecc="Q" title="Yüksek (%25 düzeltme)">Q</button>
+                                <button class="ecc-btn" data-ecc="H" title="En Yüksek (%30 düzeltme)">H</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- Logo Upload Section -->
+                    <div class="control-group">
+                        <label class="control-label">Merkezi Logo Ekle</label>
+                        <div class="logo-upload-wrapper">
+                            <input type="file" id="logoFileInput" accept="image/*" class="hidden-input">
+                            <button id="uploadLogoBtn" class="upload-area-btn">
+                                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                <span>Görsel Yükle veya Sürükle</span>
+                            </button>
+                            
+                            <div id="logoPreviewContainer" class="logo-preview-box hidden">
+                                <img id="logoPreviewImg" src="" alt="Logo">
+                                <div class="logo-preview-details">
+                                    <span class="logo-name">logo.png</span>
+                                    <button id="removeLogoBtn" class="remove-btn">Kaldır</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-row logo-options hidden" id="logoOptionsRow">
+                        <div class="control-group half-width">
+                            <label class="control-label">Logo Boyutu</label>
+                            <div class="slider-container">
+                                <input type="range" id="logoScaleSlider" min="1" max="5" value="3" class="custom-slider">
+                                <span id="logoScaleVal" class="slider-badge">3</span>
+                            </div>
+                        </div>
+                        <div class="control-group half-width">
+                            <label class="control-label flex-between">
+                                Arkadaki Noktaları Gizle
+                                <label class="switch-toggle">
+                                    <input type="checkbox" id="hideDotsCheckbox" checked>
+                                    <span class="switch-slider"></span>
+                                </label>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Column 3: Styles & Templates (Right) -->
+            <!-- Row 1: Color Customization -->
+            <section class="glass-card bento-colors">
+                <div class="card-header">
+                    <h2 class="card-title">Renk Seçimi</h2>
+                </div>
+                
+                <div class="colors-container">
+                    <div class="color-picker-row">
+                        <div class="picker-group">
+                            <span class="picker-label">QR Rengi</span>
+                            <div class="color-picker-wrapper">
+                                <input type="color" id="qrColorInput" value="#000000" class="real-picker">
+                                <div class="picker-preview" id="qrColorPreview"></div>
+                            </div>
+                        </div>
+                        <div class="picker-group">
+                            <span class="picker-label">Arka Plan</span>
+                            <div class="color-picker-wrapper">
+                                <input type="color" id="bgColorInput" value="#ffffff" class="real-picker">
+                                <div class="picker-preview" id="bgColorPreview"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="presets-section">
+                        <span class="section-subtitle">Renk Paletleri</span>
+                        <div class="color-presets">
+                            <button class="preset-dot active" data-color="#000000" style="background-color: #000000;" title="Siyah"></button>
+                            <button class="preset-dot" data-color="#4f46e5" style="background: linear-gradient(135deg, #4f46e5, #818cf8);" title="Kraliyet Mavisi"></button>
+                            <button class="preset-dot" data-color="#f43f5e" style="background: linear-gradient(135deg, #f43f5e, #fda4af);" title="Neon Mercan"></button>
+                            <button class="preset-dot" data-color="#059669" style="background: linear-gradient(135deg, #059669, #34d399);" title="Zümrüt Yeşili"></button>
+                            <button class="preset-dot" data-color="#7c3aed" style="background: linear-gradient(135deg, #7c3aed, #c084fc);" title="Siberpunk Mor"></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Row 2: QR Code Custom Styles -->
+            <section class="glass-card bento-styles">
+                <div class="card-header">
+                    <h2 class="card-title">Tasarım & Şekil</h2>
+                </div>
+                
+                <div class="styles-container">
+                    <div class="style-group">
+                        <span class="group-subtitle">Nokta Deseni</span>
+                        <div class="style-options-grid dot-styles">
+                            <button class="style-option-btn active" data-dot-type="square" title="Kare">
+                                <div class="shape-icon square-shape"></div>
+                                <span>Kare</span>
+                            </button>
+                            <button class="style-option-btn" data-dot-type="dots" title="Nokta">
+                                <div class="shape-icon dot-shape"></div>
+                                <span>Nokta</span>
+                            </button>
+                            <button class="style-option-btn" data-dot-type="rounded" title="Yuvarlak">
+                                <div class="shape-icon rounded-shape"></div>
+                                <span>Yuvarlak</span>
+                            </button>
+                            <button class="style-option-btn" data-dot-type="extra-rounded" title="Yumuşak Kare">
+                                <div class="shape-icon extra-rounded-shape"></div>
+                                <span>Yumuşak</span>
+                            </button>
+                            <button class="style-option-btn" data-dot-type="classy" title="Piksel Göz">
+                                <div class="shape-icon classy-shape"></div>
+                                <span>Modern</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="style-group">
+                        <span class="group-subtitle">Köşe Çerçevesi (Göz)</span>
+                        <div class="style-options-grid eye-frame-styles">
+                            <button class="style-option-btn active" data-eye-frame="square" title="Kare">
+                                <div class="eye-icon frame-square"></div>
+                                <span>Kare</span>
+                            </button>
+                            <button class="style-option-btn" data-eye-frame="extra-rounded" title="Yuvarlak">
+                                <div class="eye-icon frame-rounded"></div>
+                                <span>Yuvarlak</span>
+                            </button>
+                            <button class="style-option-btn" data-eye-frame="outround" title="Yaprak">
+                                <div class="eye-icon frame-outround"></div>
+                                <span>Yaprak</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Row 3: Stacked Templates (Mockup visual style) -->
+            <section class="glass-card bento-templates">
+                <div class="card-header">
+                    <h2 class="card-title">Şablonlar</h2>
+                </div>
+                
+                <div class="templates-container">
+                    <div class="templates-stack-wrapper">
+                        <!-- Template stack mimicking the stacked cards in mockup -->
+                        <div class="template-deck">
+                            <div class="template-card-deck tc-4" data-template="mint-forest" title="Mint Forest Şablonu">
+                                <div class="tc-preview" style="background: linear-gradient(135deg, #0f172a, #1e293b);">
+                                    <div class="tc-mini-qr" style="border: 2px solid #34d399; background: #34d399;"></div>
+                                </div>
+                                <span class="tc-label">Mint Forest</span>
+                            </div>
+                            <div class="template-card-deck tc-3" data-template="cyber-sunset" title="Cyber Sunset Şablonu">
+                                <div class="tc-preview" style="background: linear-gradient(135deg, #2e0854, #120024);">
+                                    <div class="tc-mini-qr" style="border: 2px solid #f43f5e; background: #f43f5e;"></div>
+                                </div>
+                                <span class="tc-label">Cyber Sunset</span>
+                            </div>
+                            <div class="template-card-deck tc-2" data-template="royal-glass" title="Royal Glass Şablonu">
+                                <div class="tc-preview" style="background: linear-gradient(135deg, #020617, #0f172a);">
+                                    <div class="tc-mini-qr" style="border: 2px solid #818cf8; background: #818cf8;"></div>
+                                </div>
+                                <span class="tc-label">Royal Glass</span>
+                            </div>
+                            <div class="template-card-deck tc-1 active" data-template="default-dark" title="Varsayılan Şablon">
+                                <div class="tc-preview" style="background: #ffffff;">
+                                    <div class="tc-mini-qr" style="border: 2px solid #000000; background: #000000;"></div>
+                                </div>
+                                <span class="tc-label">Varsayılan</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal-overlay">
+        <div class="modal-box glass-card animate-scale-up">
+            <div class="modal-header">
+                <h3>QR Kodu Paylaş</h3>
+                <button id="closeShareBtn" class="close-modal-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <p class="modal-desc">Oluşturulan QR kodunu sosyal platformlarda paylaşın veya görseli panoya kopyalayın.</p>
+                
+                <div class="share-grid">
+                    <button id="shareWhatsApp" class="share-option-btn">
+                        <div class="share-icon wa-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.557-5.342 11.897-11.953 11.897-2.006 0-3.973-.504-5.713-1.463L0 24zm6.59-3.468c1.64.974 3.238 1.488 4.81 1.49h.005c5.485 0 9.95-4.464 9.953-9.953.002-2.66-1.033-5.161-2.909-7.04C16.63 3.15 14.126 2.115 11.472 2.113 5.986 2.113 1.52 6.578 1.517 12.067c-.001 1.761.46 3.477 1.336 5.01L1.87 21.05l4.777-1.252-.001-.266zm10.882-7.403c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289-.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                            </svg>
+                        </div>
+                        <span>WhatsApp</span>
+                    </button>
+                    
+                    <button id="shareTwitter" class="share-option-btn">
+                        <div class="share-icon tw-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </div>
+                        <span>X / Twitter</span>
+                    </button>
+                    
+                    <button id="shareFacebook" class="share-option-btn">
+                        <div class="share-icon fb-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </div>
+                        <span>Facebook</span>
+                    </button>
+                    
+                    <button id="copyImageBtn" class="share-option-btn">
+                        <div class="share-icon copy-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </div>
+                        <span>Görseli Kopyala</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification (Premium Micro-interaction) -->
+    <div id="toastNotification" class="toast-wrapper">
+        <div class="toast-content">
+            <span class="toast-indicator"></span>
+            <span id="toastMessage" class="toast-text">Kopyalandı!</span>
+        </div>
+    </div>
+
+    <!-- Libraries and Main Script -->
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script src="qrcode.js"></script>
+</body>
+</html>
